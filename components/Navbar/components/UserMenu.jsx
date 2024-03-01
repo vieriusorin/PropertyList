@@ -1,6 +1,6 @@
 import Link from "next/link"
-
-const UserMenu = () => {
+import { signOut } from "next-auth/react";
+const UserMenu = ({setIsProfileMenuOpen}) => {
   return (
     <div
       id="user-menu"
@@ -16,6 +16,7 @@ const UserMenu = () => {
         role="menuitem"
         tabIndex="-1"
         id="user-menu-item-0"
+        onClick={() => setIsProfileMenuOpen(false)}
         >Your Profile</Link>
       <Link
         href="/saved-properties"
@@ -23,14 +24,18 @@ const UserMenu = () => {
         role="menuitem"
         tabIndex="-1"
         id="user-menu-item-2"
+        onClick={() => setIsProfileMenuOpen(false)}
         >Saved Properties</Link>
-      <a
-        href="#"
+      <button
+        onClick={() => {
+          setIsProfileMenuOpen(false)
+          signOut()
+        }}
         className="block px-4 py-2 text-sm text-gray-700"
         role="menuitem"
         tabIndex="-1"
         id="user-menu-item-2"
-        >Sign Out</a>
+        >Sign Out</button>
     </div>
   )
 }

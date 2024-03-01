@@ -1,8 +1,13 @@
 import React from 'react'
 import Image from 'next/image'
 
+import { useSession } from "next-auth/react";
+
 import imgProfileDefault from '@/assets/images/profile.png'
 export const ButtonUserMenu = ({setIsProfileMenuOpen}) => {
+  const { data: session } = useSession();
+  const profileImage = session?.user?.image;
+
   return (
     <div>
       <button
@@ -16,10 +21,10 @@ export const ButtonUserMenu = ({setIsProfileMenuOpen}) => {
         <span className="absolute -inset-1.5"></span>
         <span className="sr-only">Open user menu</span>
         <Image 
-        width='auto'
-        height='auto'
+        width={40}
+        height={40}
         className="h-8 w-8 rounded-full" 
-        src={imgProfileDefault} 
+        src={profileImage || imgProfileDefault} 
         alt="Profile default" 
         />
         

@@ -1,20 +1,36 @@
 'use client';
-import {useState}from 'react';
+import { useState, useEffect }from 'react';
 import Link from "next/link"
 import Image from 'next/image'
+
+import { usePathname } from 'next/navigation';
+import { useSession, getProviders } from "next-auth/react";
+
 import ButtonLoginRegister from "./components/ButtonLoginRegister"
 import { MainMenu } from "./components/MainMenu"
-
 import MainMenuMobile from "./components/MainMenuMobile"
 import Notifications from "./components/Notifications"
 
 import logo from '@/assets/images/logo-white.png'
 
-
 const Navbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const { data: session } = useSession();
+
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [providers, setProviders] = useState(null);
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const setAuthProviders = async () => {
+      const res = await getProviders();
+      setProviders(res);
+    };
+
+    setAuthProviders();
+  }, []);
+
   return (
     <nav className="bg-blue-700 border-b border-blue-500">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -55,15 +71,19 @@ const Navbar = () => {
               <span className="hidden md:block text-white text-2xl font-bold ml-2">PropertyPulse</span>
             </Link>
             <div className="hidden md:ml-6 md:block">
-              <MainMenu isLoggedIn={isLoggedIn} />
+              <MainMenu isLoggedIn={session} />
             </div>
           </div>
 
           {
-            !isLoggedIn ? (
+            !session ? (
               <div className="md:block md:ml-6">
               <div className="flex items-center">
-                <ButtonLoginRegister />
+                {!!providers && 
+                  Object.values(providers).map((provider, index) => (
+                    <ButtonLoginRegister key={index} provider={provider} />
+                  ))
+                }
               </div>
             </div> 
             ) : <Notifications 
@@ -71,15 +91,12 @@ const Navbar = () => {
             isProfileMenuOpen={isProfileMenuOpen}
           />
           }
-          
-
-          
         </div>
       </div>
 
     {
       isMobileMenuOpen && (
-        <MainMenuMobile isLoggedIn={isLoggedIn} />
+        <MainMenuMobile isLoggedIn={session} />
       )
     }
     </nav>

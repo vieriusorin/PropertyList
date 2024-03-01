@@ -1,10 +1,11 @@
 import Link from "next/link"
-import { customLinks } from "../utils"
-import { FaGoogle } from "react-icons/fa6";
+import { customLinks } from "../utils";
 import { usePathname } from "next/navigation"
+import ButtonLoginRegister from "./ButtonLoginRegister";
 
 export const MainMenuMobile = ({
-  isLoggedIn
+  isLoggedIn,
+  providers
 }) => {
   const pathname = usePathname();
   return (
@@ -18,13 +19,10 @@ export const MainMenuMobile = ({
             ))
           }
           {
-            !isLoggedIn && (
-            <button
-              className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-4"
-            >
-              <FaGoogle className="text-white mr-2" />
-              <span>Login or Registers</span>
-            </button>
+            !isLoggedIn && !!providers && (
+              Object.values(providers).map((provider, index) => (
+                <ButtonLoginRegister key={index} provider={provider} />
+              ))
             )
           }  
         </div>

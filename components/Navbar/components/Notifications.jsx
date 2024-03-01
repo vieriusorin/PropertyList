@@ -37,7 +37,7 @@ const Notifications = ({setIsProfileMenuOpen, isProfileMenuOpen}) => {
             <div className="relative ml-3">
               <ButtonUserMenu setIsProfileMenuOpen={setIsProfileMenuOpen} />
               {
-                isProfileMenuOpen && <UserMenu />
+                isProfileMenuOpen && <UserMenu setIsProfileMenuOpen={setIsProfileMenuOpen} />
               }
              
             </div>
