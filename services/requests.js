@@ -1,3 +1,5 @@
+import { revalidatePath } from "next/cache";
+
 const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null;
 
 const getProperties = async () => {
@@ -70,15 +72,16 @@ const removePropertyById = async (id) => {
 			method: "DELETE",
 		});
 
-		if (!res.ok) {
+		if (res.status === 200) {
 			throw new Error("Failed to delete property");
 		}
 
 		return res.json();
 	} catch (error) {
-		console.log(error);
 		return null;
 	}
+
+	revalidatePath("/api/properties/:id");
 };
 
 export {
